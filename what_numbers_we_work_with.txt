@@ -1,0 +1,17 @@
+
+
+1. Use 2013 closing stock data and tweets for training purposes
+2. Use 2014 closing stock data and tweets for testing purposes
+
+3. Probabilities of fluctuations on day-to-day basis for stock price 
+4. Probabilities of fluctuations on day-to-day basis for tweet sentiment
+
+Prior probabilities can be adjusted based on new data:
+For instance, if for every 10-day set of stock prices, there is consistently observed a day where the price sharply increases or decreases, this can be said to be a pattern. This training data is then used to create a Prior probability for this event. In this case, the Prior is 1/10. Therefore, we assign a 10% chance of seeing a sharp increase or decrease in the value of the stock every 10 days.
+
+n = 10
+P(+|n) = .10
+P(~+|n) = .90
+
+Bayesian Algorithm: 
+P(+|n) = P(n|+)P(+) / P(n)
