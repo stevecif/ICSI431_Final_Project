@@ -7,12 +7,25 @@ import sys
 import math 
 
 UNIFORM	= ((rand()+0.5)/(RAND_MAX+1.0))	# Uniform inside (0,1)
-def PLUS(x,y):	return (x>y ? x+math.log(1+math.exp(y-x)) : y+math.log(1+math.exp(x-y))) #logarithmic addition log(exp(x) + exp(y))
+def PLUS(x,y):	
+	return (x>y ? x+math.log(1+math.exp(y-x)) : y+math.log(1+math.exp(x-y))) #logarithmic addition log(exp(x) + exp(y))
 # ______________________________________________________________________ 
 	#
 	# ___________________________________________________________________
 	# 
 	#def Obj(n): [e] * n	#Collection of n objects
+	MAX = 1000
+    n = 100
+    
+    cObj = cell([n, f]);
+	Obj = cell2struct(cObj, fieldnames, 2);
+
+	cSamples = cell([MAX, f]);
+	Samples = cell2struct(cSamples, fieldnames, 2);
+
+	cTry = cell([1, f]);
+	Try = cell2struct(cTry, fieldnames, 2);
+
 	Obj = []			#Collection of n objects
 	Samples = []        #Objects stored for posteriorresults 			
 	logwidth = 0.0		#ln(width in prior mass)
