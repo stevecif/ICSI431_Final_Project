@@ -1,0 +1,8 @@
+
+# HOW TO USE
+
+# Make sure you have lxml and PyQuery installed before use. 
+
+# In the terminal, cd to the GOT folder and then enter the following (adjust SEARCH TERMS and AMOUNT as necessary):
+
+python Exporter.py --querysearch 'SEARCH TERMS' --maxtweets AMOUNT

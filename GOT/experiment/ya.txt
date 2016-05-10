@@ -1,0 +1,2 @@
+username;date;retweets;favorites;text;geo;mentions;hashtags;id;permalink
+{"user": End_of_Europe, "created_at": 2016-05-10 12:33;50;24, "retweets": null, "favorites": null, "text": "whatever this is a string of text", "geo": null, "mentions": null, "hashtags": [], "id": 730073252073226240, "permalink": https://twitter.com/End_of_Europe/status/730073252073226240}
