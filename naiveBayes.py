@@ -259,46 +259,4 @@ print('Predictions: {0}').format(predictions)
 accuracy = getAccuracy(testSet, predictions)
 print('Accuracy: {0}%').format(accuracy)
 
-'''
-print len(prices)
-print len(t_dates)
-print len(new_sc)
-
-# for x in range(365):
-#     date = x
-#     if x < 31:
-#         month = 1
-
-x = new_sd #map(float, s_dates)
-y1 = prices
-y2 = new_sc
-plt.plot(x, y1)
-#plt.plot(y1,'r')
-#plt.plot(y2,'b')
-plt.show()
-'''
-
-
-
-'''
-f = lambda x: np.exp(3 * x)
-
-x_tr = np.linspace(0., 2, 200)
-y_tr = f(x_tr)
-
-#x = np.array([0, .1, .2, .5, .8, .9, 1])
-#y = f(x) + np.random.randn(len(x))
-x = sto_changes
-#x = np.asarray(x)
-y = twe_changes
-y = y[:248]
-#y = np.asarray(y)
-
-#print len(x), len(y)
-
-plt.figure(figsize=(6,3));
-plt.plot(x_tr[:100], y_tr[:100], '--k');
-plt.plot(x, y, 'ok', ms=10);
-plt.show()
-'''
 
