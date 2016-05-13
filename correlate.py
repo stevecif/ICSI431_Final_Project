@@ -84,10 +84,11 @@ a = sto_ups
 b = twe_ups
 c = sto_downs
 d = twe_downs
-up_matches = [i for i, j in zip(a, b) if i == j]
-down_matches = [i for i, j in zip(c, d) if i == j]
-correlation1 =  float(len(up_matches)) / float(len(dates))
-correlation2 =  float(len(down_matches)) / float(len(dates))
+up_matches = list(set(a) & set(b)) #[i for i, j in zip(a, b) if i == j]
+down_matches = list(set(c) & set(d)) #[q for q, w in zip(c, d) if q == w]
+correlation1 =  float(len(up_matches)) / float(len(s_dates))
+correlation2 =  float(len(down_matches)) / float(len(t_dates))
+
 print "The correlation score for tweets and stock increases in this data set is ", correlation1
 print "The correlation score for tweets and stock decreases in this data set is ", correlation2
 
