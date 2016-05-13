@@ -1,4 +1,4 @@
-''' Time for some correlation code fam.
+''' Time for some naive bayes action fam.
 
 We want to know what the probability would be to see an increase in the value of a stock the same day twitter sentiment related to that stock increases in positive sentiment, or, conversely, the probability we would see a decrease in the value of the stock the same day the twitter sentiment related to that stock dropped in sentiment.
 
