@@ -2,9 +2,10 @@
 
 We want to know what the probability would be to see an increase in the value of a stock the same day twitter sentiment related to that stock increases in positive sentiment, or, conversely, the probability we would see a decrease in the value of the stock the same day the twitter sentiment related to that stock dropped in sentiment.
 
-Using Tweet(date, sentiment score) and Stock(date, closing price) from the year 2013 as our training set, and Tweet(date, sentiment score) and Stock(date, closing price) from the year 2014 as our testing set, the simple project is to measure the accuracy of such a correlation, which would serve to give all those interested a better understanding of how useful Twitter sentiment data might be for making predictions about the stock market. 
+Using Tweet(date, sentiment score) and Stock(date, closing price) from the years 2013 and 2014 as our testing and training sets, the simple project is to measure the accuracy of such a correlation, which would serve to give all those interested a better understanding of how useful Twitter sentiment data might be for making predictions about the stock market. 
 '''
 
+# This is the module where all the necessary libraries are imported.
 import csv
 import random
 import math
@@ -19,14 +20,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 print " "
 
-def loadCsv(filename):
+# These are the functions needed to make the whole Naive Bayes algorithm fire.
+def csvLoad(filename):
     lines = csv.reader(open(filename, "rb"))
     dataset = list(lines)
     for i in range(len(dataset)):
         dataset[i] = [float(x) for x in dataset[i]]
     return dataset
 
-def splitDataset(dataset, splitRatio):
+def splitData(dataset, splitRatio):
     trainSize = int(len(dataset) * splitRatio)
     trainSet = []
     copy = list(dataset)
@@ -35,7 +37,7 @@ def splitDataset(dataset, splitRatio):
         trainSet.append(copy.pop(index))
     return [trainSet, copy]
 
-def separateByClass(dataset):
+def separate(dataset):
     separated = {}
     for i in range(len(dataset)):
         vector = dataset[i]
@@ -47,39 +49,39 @@ def separateByClass(dataset):
 def mean(numbers):
     return sum(numbers)/float(len(numbers))
 
-def stdev(numbers):
+def stanDev(numbers):
     avg = mean(numbers)
     variance = sum([pow(x-avg,2) for x in numbers])/float(len(numbers)-0)
     return math.sqrt(variance)
 
 def summarize(dataset):
-    summaries = [(mean(attribute), stdev(attribute)) for attribute in zip(*dataset)]
+    summaries = [(mean(attribute), stanDev(attribute)) for attribute in zip(*dataset)]
     del summaries[-1]
     return summaries  
 
-def summarizeByClass(dataset):
-    separated = separateByClass(dataset)
+def summarizeClass(dataset):
+    separated = separate(dataset)
     summaries = {}
     for classValue, instances in separated.iteritems():
         summaries[classValue] = summarize(instances)
     return summaries      
 
-def calculateProbability(x, mean, stdev):
-    exponent = math.exp(-(math.pow(x-mean,2)/(2*math.pow(stdev,2) + 0.01)))
-    return (1 / (math.sqrt(2*math.pi) * stdev + 0.01)) * exponent
+def calcProb(x, mean, stanDev):
+    exponent = math.exp(-(math.pow(x-mean,2)/(2*math.pow(stanDev,2) + 0.01)))
+    return (1 / (math.sqrt(2*math.pi) * stanDev + 0.01)) * exponent
 
-def calculateClassProbabilities(summaries, inputVector):
+def calcClassProbs(summaries, inputVector):
     probabilities = {}
     for classValue, classSummaries in summaries.iteritems():
         probabilities[classValue] = 1
         for i in range(len(classSummaries)):
-            mean, stdev = classSummaries[i]
+            mean, stanDev = classSummaries[i]
             x = inputVector[i]
-            probabilities[classValue] *= calculateProbability(x, mean, stdev)
+            probabilities[classValue] *= calcProb(x, mean, stanDev)
     return probabilities
 
 def predict(summaries, inputVector):
-    probabilities = calculateClassProbabilities(summaries, inputVector)
+    probabilities = calcClassProbs(summaries, inputVector)
     bestLabel, bestProb = None, -1
     for classValue, probability in probabilities.iteritems():
         if bestLabel is None or probability > bestProb:
@@ -113,7 +115,7 @@ for line in open('./data/tweets.txt'):
     tweet_data.append(line)    
 tweet_data = tweet_data
 
-# Refines imported data and splits it into three arrays by type, which are "dates", "prices", and "scores".
+# Refines imported data and splits it into four arrays by type, which are "t_dates", "s_dates", "prices", and "scores".
 s_dates = []
 prices = []
 for x in range(len(stock_data)):
@@ -121,7 +123,6 @@ for x in range(len(stock_data)):
     s_dates.append(date)
     price = stock_data[x][1]
     prices.append(price)
-
 t_dates = []
 scores = []
 for line in tweet_data:
@@ -169,12 +170,15 @@ for x in range(len(scores)):
 
 avg_twe_change = mean(twe_changes)
 
+# This block records the number of dates where prices and tweet scores rise or fall, and when they coincide. 
 a = sto_ups
 b = twe_ups
 c = sto_downs
 d = twe_downs
-up_matches = list(set(a) & set(b)) #[i for i, j in zip(a, b) if i == j]
-down_matches = list(set(c) & set(d)) #[q for q, w in zip(c, d) if q == w]
+up_matches = list(set(a) & set(b)) 
+down_matches = list(set(c) & set(d)) 
+
+# This section calculates how often the price and stock markers coincide out of the total number of days period, and these calculations are printed accordingly.
 correlation1 =  float(len(up_matches)) / float(len(s_dates))
 correlation2 =  float(len(down_matches)) / float(len(t_dates))
 
@@ -190,6 +194,7 @@ Alright y'all, let's take a moment to stop and think about what we've created so
 
 '''
 
+# This section revises the dates (which are stored as strings in their respective arrays), and converts them into datetime objects (which are floats).
 new_sd = []
 for x in s_dates:
     date_obj = datetime.strptime(x, '%Y-%m-%d')
@@ -200,20 +205,6 @@ for x in t_dates:
     date_obj = datetime.strptime(x, '%Y-%m-%d')
     new_td.append(date_obj) 
 
-new_sc = []
-for x in scores:
-    update = x * 100 
-    new_sc.append(update)   
-
-gener = mean(new_sc)
-
-fin = []
-for x in range(len(s_dates)):
-    if s_dates[x] == t_dates[x]:
-        fin.append(t_dates[x])
-    else:
-        fin.append(s_dates[x])
-
 sc_class = []
 pos = 1
 neg = 0
@@ -222,8 +213,6 @@ for x in scores:
         sc_class.append(pos)
     else:
         sc_class.append(neg)    
-
-#sto_classer = [list(i) for i in zip(new_sd, scores, sc_class)]
 
 # This module creates an ID for the stocks based on their corresponding date.
 def to_integer(dt_time):
@@ -248,11 +237,11 @@ with open('csv_train.csv', 'w') as fp:
 # Now that we've constructed a CSV from the day-to-day changes
 filename = 'csv_train.csv'
 splitRatio = 0.67
-dataset = loadCsv(filename)
-trainingSet, testSet = splitDataset(dataset, splitRatio)
+dataset = csvLoad(filename)
+trainingSet, testSet = splitData(dataset, splitRatio)
 print('Split {0} rows into train={1} and test={2} rows').format(len(dataset), len(trainingSet), len(testSet))
 # prepare model
-summaries = summarizeByClass(trainingSet)
+summaries = summarizeClass(trainingSet)
 # test model
 predictions = getPredictions(summaries, testSet)
 print('Predictions: {0}').format(predictions)
